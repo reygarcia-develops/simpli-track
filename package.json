@@ -1,19 +1,20 @@
 {
+  "author": "Rey Garcia | reygarcia.develops@gmail.com",
   "name": "simpli-track",
   "version": "1.0.0",
   "description": "",
   "main": "server/server.js",
   "scripts": {
-    "start": "cd server && npm run start",
+    "build": "concurrently \"cd server && npm run build\" \"npm run client\"",
+    "client": "echo 'Client not configured yet'",
     "dev": "concurrently \"cd server && npm run watch\" \"npm run client\"",
     "install": "cd server && npm i",
-    "build": "concurrently \"cd server && npm run build\" \"npm run client\"",
-    "server:build": "cd server && npm run build",
     "render-build":"npm run install && npm run server:build && npm run client:build",
-    "client": "echo 'Client not configured yet'"
+    "server:build": "cd server && npm run build",
+    "server:codegen": "cd server && npm run codegen",
+    "start": "cd server && npm run start"
   },
   "keywords": [],
-  "author": "",
   "license": "ISC",
   "devDependencies": {
     "concurrently": "^9.1.0"
