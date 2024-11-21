@@ -1,0 +1,106 @@
+@import '../../variables';
+@import '../../keyframes.scss';
+
+.header-container {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  min-height: $header-min-height;
+  padding-inline: 50px;
+  padding-top: 15px;
+  position: sticky;
+  top: 0;
+  z-index: 1000; // Ensure it stays on top
+  border: none;
+  transition: box-shadow 0.3s ease-in-out;
+
+  &.scrolled {
+    box-shadow: 0 4px 6px rgba(rgb(99, 99, 99), 0.5);
+    padding-top: 0;
+  }
+
+  .name-container {
+    align-items: baseline;
+    display: flex;
+
+    &:hover {
+      transform: scale(1.05);
+      transition: transform .5s;
+      cursor: pointer;
+    }
+    .name {
+      font-size: clamp(0.8rem, 1rem + 1vw, 1.8rem);
+      font-weight: 600;
+      animation: drop-in 0.3s forwards;
+      opacity: 0;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+    .subtitle {
+      font-size: clamp(0.8rem, 1rem + 1vw, 1.8rem);
+      font-weight: 100;
+      opacity: 0;
+      animation: .5s drop-in 0.3s forwards;
+    }
+  }
+
+}
+
+
+@media (max-width: 830px) {
+  .header-container {
+    padding-inline: 30px;
+  }
+}
+
+.theme-icon {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  position: relative; /* Make sure the sun and moon are positioned relative to this container */
+
+  &:hover {
+    transform: scale(1.1);
+    transition: transform .5s;
+  }
+
+  .sun, .moon {
+    position: absolute;
+    opacity: 0;
+
+    &.animate-down {
+      animation: slideDown 0.5s forwards;
+    }
+    &.animate-up {
+      animation: slideUp 0.5s forwards;
+    }
+  }
+
+}
+
+
+
+
+@keyframes slideUp {
+  0% {
+    opacity: 1;
+    transform: translateY(0); /* Sun starts above */
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px); /* Sun moves down */
+  }
+}
+
+@keyframes slideDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px); /* Sun starts above */
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0px); /* Sun moves down */
+  }
+}

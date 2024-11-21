@@ -1,0 +1,71 @@
+<div class="login-container">
+  <div class="form-container">
+    <span class="title">Welcome back</span>
+    <form class="login-form" [formGroup]="loginForm" >
+      <div class="form-group-container slide-in">
+        <div class="form-group" #usernameGroup>
+          <input 
+            [formControl]="getFormControl('username')" 
+            required 
+            placeholder=" " 
+            id="username" 
+            autocomplete="username" 
+            type="text"
+            (focus)="onFocusOrBlur('username')"
+            (blur)="onFocusOrBlur('username')"
+            minlength="3"
+            maxlength="20"
+          >
+          <label for="username">Username</label>
+        </div>
+      </div>
+      <div class="form-group-container">
+        <div class="form-group" #emailGroup>
+          <input 
+            [formControl]="getFormControl('email')" 
+            required 
+            placeholder=" " 
+            id="email" 
+            autocomplete="email" 
+            type="email"
+            (focus)="onFocusOrBlur('email')"
+            (blur)="onFocusOrBlur('email')"
+          >
+          <label for="email">Email</label>
+        </div>
+      </div>
+      <div class="form-group-container">
+        <div class="form-group" #passwordGroup>
+          <input 
+            [formControl]="getFormControl('password')" 
+            required 
+            placeholder=" "
+            id="password" 
+            type="password"
+            (focus)="onFocusOrBlur('password')"
+            (blur)="onFocusOrBlur('password')"
+            minlength="10"
+            maxlength="50"
+          >
+          <label for="password">Password</label>
+        </div>
+        @if(loginForm.controls['password'].hasError('minlength')){
+          <div class="input-error">Must be at least 10 chars</div>
+        }
+      </div>
+
+        <!-- TODO, SHOW ERRORS AT ONCE  -->
+        <!-- @if(loginForm.get('password')?.hasError('minlength')) {
+          <mat-error>Password must be at least 10 characters long</mat-error>
+        }
+        @if(loginForm.get('password')?.hasError('passwordInvalid')) {
+          <mat-error>Mix in 1 uppercase, 1 lowercase, 1 number, and 1 special char!</mat-error>
+
+        } -->
+    </form>
+    <div class="button-group">
+      <button type="button">New here?</button>
+      <button class="primary" type="submit" [disabled]="loginForm.invalid" (click)="loginUser()">Login</button>
+    </div>
+  </div>
+</div>

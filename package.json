@@ -5,12 +5,12 @@
   "description": "",
   "main": "server/server.js",
   "scripts": {
-    "build": "concurrently \"cd server && npm run build\" \"npm run client\"",
-    "client": "echo 'Client not configured yet'",
-    "dev": "concurrently \"cd server && npm run watch\" \"npm run client\"",
-    "install": "cd server && npm i",
+    "build": "concurrently \"npm run server:build\" \"npm run client:build\"",
+    "dev": "concurrently \"cd server && npm run watch\" \"cd client && npm run start\"",
+    "install": "cd server && npm i && ../client & npm i",
     "render-build":"npm run install && npm run server:build && npm run client:build",
     "server:build": "cd server && npm run build",
+    "client:build": "cd client && npm run build",
     "server:codegen": "cd server && npm run codegen",
     "start": "cd server && npm run start"
   },

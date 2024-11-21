@@ -1,0 +1,37 @@
+/* DROP IN */
+$drop-in-start: -100%;
+$drop-in-start: -100%;
+$drop-in-end: 0;
+$drop-in-opacity-start: 0;
+$drop-in-opacity-end: 1;
+
+@keyframes drop-in {
+  0% {
+    transform: translateY($drop-in-start);
+    opacity: $drop-in-opacity-start;
+  }
+  100% {
+    transform: translateY($drop-in-end);
+    opacity: $drop-in-opacity-end;
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-in-right {
+  0% {
+    transform: translateX(-10%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0%);
+    opacity: 1;
+  }
+}
