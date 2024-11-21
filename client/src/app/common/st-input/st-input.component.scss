@@ -91,8 +91,10 @@
     caret-color: var(--base-font-color);
     font-family: "Montserrat", sans-serif;
     font-size: 1rem;
+    color: var(--base-font-color);
     font-weight: 300;
     outline: none;
+    //TODO prevent dragging
   }
 
   // TODO: Make into a base style
