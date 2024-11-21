@@ -1,0 +1,123 @@
+@import '../../../variables.scss';
+
+.form-group {
+  background-color: var(--base-grey);
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 25px 20px 5px 20px;
+  position: relative;
+  transition: border-color .3s ease;
+
+  &:before {
+    animation: expand 0.3s ease forwards;
+    background-color: var(--animation-color, var(--base-input-underline));
+    bottom: 0;
+    content: "";
+    height: 1.5px;
+    left: 0;
+    position: absolute;
+    transform-origin: center;
+    width: 100%;
+  }
+
+  &.animate-expand {
+    &:before {
+      animation: expand 0.3s ease forwards;
+      background-color: var(--animation-color, var(--base-primary));
+      bottom: 0;
+      content: "";
+      height: 1.5px;
+      left: 0;
+      position: absolute;
+      transform-origin: center;
+      width: 100%;
+    }
+  }
+
+  &.animate-shrink {
+    &:before {
+      animation: shrink 0.3s ease forwards;
+      background-color: var(--animation-color, var(--base-input-underline));
+      border-color: transparent;
+      bottom: 0;
+      content: "";
+      height: 1.5px;
+      left: 0;
+      position: absolute;
+      transform-origin: center;
+      width: 100%;
+    }
+  }
+
+
+  // When focused
+  &:focus-within {
+    // We want to make the border-color transparent
+    // since we will be using background now that
+    // its in focus
+    border-color: transparent;
+
+    label,
+    input:not(:placeholder-shown) + label {
+      transform: translateY(-25px);
+      font-size: $xs-text;
+      color: var(--base-primary);
+      opacity: 1;
+    }
+  }
+
+  // When not focused
+  &:not(:focus-within) {
+    input:not(:placeholder-shown):not(:focus) + label {
+      font-size: $xs-text;
+      opacity: 1;
+      transform: translateY(-25px);
+    }
+
+    input:not(:placeholder-shown):not(:focus):not(:invalid) + label {
+      font-size: $xs-text;
+      opacity: 1;
+      transform: translateY(-25px);
+    }
+  }
+
+  // TODO: Make into a base style
+  input {
+    background-color: var(--base-grey);
+    border: none;
+    caret-color: var(--base-font-color);
+    font-family: "Montserrat", sans-serif;
+    font-size: 1rem;
+    font-weight: 300;
+    outline: none;
+  }
+
+  // TODO: Make into a base style
+  label {
+    bottom: 5px;
+    color: #999;
+    left: 20px;
+    opacity: 1;
+    pointer-events: none;
+    position: absolute;
+    transition: all 0.3s ease;
+  }
+}
+
+.input-error {
+  color: var(--base-error);
+  font-size: $s-text
+}
+
+@keyframes expand {
+  0% { transform: scaleX(0); opacity: 0; }
+  100% { transform: scaleX(1); opacity: 1; }
+}
+
+@keyframes shrink {
+  0% { transform: scaleX(1); opacity: 1; }
+  100% { transform: scaleX(0); opacity: .5; }
+}

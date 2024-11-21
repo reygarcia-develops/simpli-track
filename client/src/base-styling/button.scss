@@ -1,0 +1,30 @@
+button {
+  all: unset;
+
+  align-items: center;
+  background-color: var(--base-grey);
+  border-radius: 8px;
+  border: none;
+  color: var(--base-font-color);
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  min-width: 100px;
+  padding: 10px;
+
+  &:disabled {
+    color: var(--base-disabled-color);
+    background-color: var(--base-disabled-bg);
+    cursor: url('/disabled.svg'), not-allowed !important;
+  }
+
+  &.primary {
+    color: var(--primary-font-color);
+    background-color: var(--base-primary);
+
+    &:disabled {
+      color: var(--primary-disabled-color);
+      background-color: var(--primary-disabled-bg);
+    }
+  }
+}
