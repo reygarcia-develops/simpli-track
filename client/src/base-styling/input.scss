@@ -1,5 +1,3 @@
-@import '../../../variables.scss';
-
 .form-group {
   background-color: var(--base-grey);
   border-top-left-radius: 8px;
@@ -71,13 +69,13 @@
 
   // When not focused
   &:not(:focus-within) {
-    input:not(:placeholder-shown):not(:focus) + label {
+    input:not(:placeholder-shown):not(:focus) ~ label {
       font-size: $xs-text;
       opacity: 1;
       transform: translateY(-25px);
     }
 
-    input:not(:placeholder-shown):not(:focus):not(:invalid) + label {
+    input:not(:placeholder-shown):not(:focus):not(:invalid) ~ label {
       font-size: $xs-text;
       opacity: 1;
       transform: translateY(-25px);
@@ -94,7 +92,6 @@
     color: var(--base-font-color);
     font-weight: 300;
     outline: none;
-    //TODO prevent dragging
   }
 
   // TODO: Make into a base style
@@ -107,11 +104,60 @@
     position: absolute;
     transition: all 0.3s ease;
   }
+
+  svg {
+    position: absolute;
+    vertical-align: middle;
+    right: 30px;
+    bottom: 8px;
+
+    path {
+      fill: var(--base-input-underline);
+    }
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  .eye-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  
+  .closed-eye {
+    opacity: 1;
+    transform: rotate(0deg);
+  }
+  
+  .open-eye {
+    opacity: 0;
+    transform: rotate(-45deg);
+  }
+  
+  .open-eye-active {
+    opacity: 1;
+    transform: rotate(0deg);
+  }
+  
+  .closed-eye-active {
+    opacity: 0;
+    transform: rotate(45deg);
+  }
 }
 
 .input-error {
   color: var(--base-error);
-  font-size: $s-text
+  font-size: $s-text;
+  opacity: 0;
+  transition: opacity ease .3s;
+  height: 0;
+  
+  &.animate {
+    opacity: 1;
+    height: auto;
+  }
 }
 
 @keyframes expand {

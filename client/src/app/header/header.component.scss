@@ -48,13 +48,6 @@
 
 }
 
-
-@media (max-width: 830px) {
-  .header-container {
-    padding-inline: 30px;
-  }
-}
-
 .theme-icon {
   width: 30px;
   height: 30px;
@@ -81,7 +74,11 @@
 }
 
 
-
+@media (max-width: 830px) {
+  .header-container {
+    padding-inline: 30px;
+  }
+}
 
 @keyframes slideUp {
   0% {

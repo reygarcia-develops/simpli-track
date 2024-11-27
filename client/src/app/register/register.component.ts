@@ -5,18 +5,20 @@ import { CommonModule } from '@angular/common';
 import { addAnimationEndListener } from '../common/animation-helper';
 import { Apollo, gql } from 'apollo-angular';
 import { passwordAsyncValidator } from '../common/validators';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 
 
 @Component({
-  selector: 'st-login',
+  selector: 'st-register',
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule, RouterModule],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.scss',
+  templateUrl: './register.component.html',
+  styleUrl: './register.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoginComponent implements OnInit{
+export class RegisterComponent implements OnInit{
+  @ViewChild('usernameGroup') 
+  usernameGroup: ElementRef | undefined;
 
   @ViewChild('emailGroup') 
   emailGroup: ElementRef | undefined;
@@ -33,6 +35,7 @@ export class LoginComponent implements OnInit{
   public isNewUser: WritableSignal<boolean> = signal(false);
 
   public loginForm: FormGroup = this.fb.group({
+    username: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(20)]],
     email: ['', [Validators.required, Validators.email]],
     password: [
       '',
@@ -65,17 +68,19 @@ export class LoginComponent implements OnInit{
       notifyOnNetworkStatusChange: true
     }).valueChanges.pipe(map(({data}) => data.hello));
 
+    this.createControlListener('username');
     this.createControlListener('email');
     this.createControlListener('password');
   }
 
-  public loginUser() {
-    console.log('Logging in');
+  public registerUser() {
+    console.log('Registering user');
   }
 
   public onFocus(ctrlName: string) {
     const el =  ctrlName === 'password' ? this.passwordGroup?.nativeElement :
-    ctrlName === 'email' ? this.emailGroup?.nativeElement : null;
+    ctrlName === 'email' ? this.emailGroup?.nativeElement :
+    ctrlName === 'username' ? this.usernameGroup?.nativeElement : null;
 
     if (!el) {
       return;
@@ -88,8 +93,8 @@ export class LoginComponent implements OnInit{
 
   public onBlur(ctrlName: string) {
     const el =  ctrlName === 'password' ? this.passwordGroup?.nativeElement :
-                ctrlName === 'email' ? this.emailGroup?.nativeElement : null
-
+                ctrlName === 'email' ? this.emailGroup?.nativeElement :
+                ctrlName === 'username' ? this.usernameGroup?.nativeElement : null;
     if (!el) {
       return;
     }
@@ -100,14 +105,13 @@ export class LoginComponent implements OnInit{
 
   }
 
-  public getFormControl(controlName: string): FormControl {
-    return this.loginForm.controls[controlName] as FormControl
-  }
-
   public passwordToggle(event: Event) {
     this.isPasswordVisible.set(!this.isPasswordVisible());
   }
 
+  public getFormControl(controlName: string): FormControl {
+    return this.loginForm.controls[controlName] as FormControl
+  }
 
   /**
    * Triggers the shrink animation on the input element and transitions to the expand animation
@@ -156,7 +160,8 @@ export class LoginComponent implements OnInit{
       debounceTime(300)
     ).subscribe(() => {
       const el =  ctrlName === 'password' ? this.passwordGroup?.nativeElement :
-      ctrlName === 'email' ? this.emailGroup?.nativeElement : null
+      ctrlName === 'email' ? this.emailGroup?.nativeElement :
+      ctrlName === 'username' ? this.usernameGroup?.nativeElement : null;
 
       if (!el) {
         return;

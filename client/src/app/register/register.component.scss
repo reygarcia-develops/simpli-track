@@ -2,7 +2,7 @@
 @import '../../keyframes.scss';
 
 $title-delay: 0s;
-.login-container {
+.register-container {
   display: flex;
   flex: 1;
   align-items: center;
@@ -21,6 +21,9 @@ $title-delay: 0s;
     }
     &:nth-of-type(2) {
       animation: .5s slide-in-right ($title-delay + .45) forwards;
+    }
+    &:nth-of-type(3) {
+      animation: .5s slide-in-right ($title-delay + .6) forwards;
     }
 
   }
@@ -43,7 +46,7 @@ $title-delay: 0s;
       }
     }
   
-    .login-form {
+    .register-form {
       display: flex;
       flex-direction: column;
       gap: 20px
@@ -59,7 +62,7 @@ $title-delay: 0s;
     display: flex ;
     justify-content: space-between;
     opacity: 0;
-    animation: .5s slide-in-right ($title-delay + .6) forwards;
+    animation: .5s slide-in-right ($title-delay + .8) forwards;
 
     button {
       &:hover {
