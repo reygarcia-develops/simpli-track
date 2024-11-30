@@ -30,7 +30,7 @@
             required 
             placeholder=" "
             id="password" 
-            type="password"
+            [type]="!isPasswordVisible() ? 'password' : 'text'"
             (focus)="onFocus('password')"
             (blur)="onBlur('password')"
             minlength="10"
