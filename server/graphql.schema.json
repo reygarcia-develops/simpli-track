@@ -11,12 +11,12 @@
       {
         "kind": "OBJECT",
         "name": "AuthResponse",
-        "description": "Returns the JWT token and the User type",
+        "description": "Represents the authentication response returned after a successful login or user registration.\nIt contains the authentication token and the user details.",
         "isOneOf": null,
         "fields": [
           {
             "name": "token",
-            "description": null,
+            "description": "The authentication token that can be used for subsequent requests to access protected resources.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
@@ -32,12 +32,16 @@
           },
           {
             "name": "user",
-            "description": null,
+            "description": "The user object returned after login or registration, containing essential user details.",
             "args": [],
             "type": {
-              "kind": "OBJECT",
-              "name": "UserResponse",
-              "ofType": null
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "UserResponse",
+                "ofType": null
+              }
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -73,13 +77,13 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "LoginUser",
-        "description": "A input for required info for logging in a user",
+        "description": "Input type for logging in a user.\nThis type requires the email and password of the user in order to authenticate them.",
         "isOneOf": false,
         "fields": null,
         "inputFields": [
           {
             "name": "email",
-            "description": null,
+            "description": "The email address associated with the user's account. Used for login.",
             "type": {
               "kind": "NON_NULL",
               "name": null,
@@ -95,7 +99,7 @@
           },
           {
             "name": "password",
-            "description": null,
+            "description": "The password associated with the user's account. Used for authentication.",
             "type": {
               "kind": "NON_NULL",
               "name": null,
@@ -122,7 +126,7 @@
         "fields": [
           {
             "name": "loginUser",
-            "description": "Logs in the user via their email and password. Returns an Auth",
+            "description": "Logs in the user using their email and password. \nReturns an AuthResponse containing the authentication token and user details.",
             "args": [
               {
                 "name": "input",
@@ -151,7 +155,7 @@
           },
           {
             "name": "registerUser",
-            "description": "Registers a user. Returns an Auth",
+            "description": "Registers a new user by providing their username, email, and password.\nReturns an AuthResponse containing the authentication token and the newly created user details.",
             "args": [
               {
                 "name": "input",
@@ -192,7 +196,7 @@
         "fields": [
           {
             "name": "hello",
-            "description": null,
+            "description": "A simple query that returns a greeting message for the provided name.\nUseful for testing the GraphQL API.",
             "args": [
               {
                 "name": "name",
@@ -228,13 +232,13 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "RegisterUser",
-        "description": "A input for registering a new user to the Simpli Track",
+        "description": "Input type for registering a new user.\nThis type contains the necessary information (username, email, password) to create a new user account.",
         "isOneOf": false,
         "fields": null,
         "inputFields": [
           {
             "name": "email",
-            "description": null,
+            "description": "The email address the user wants to associate with their account. This will be used for login and notifications.",
             "type": {
               "kind": "NON_NULL",
               "name": null,
@@ -250,7 +254,7 @@
           },
           {
             "name": "password",
-            "description": null,
+            "description": "The password that will be associated with the user's account. Should meet security requirements.",
             "type": {
               "kind": "NON_NULL",
               "name": null,
@@ -266,7 +270,7 @@
           },
           {
             "name": "username",
-            "description": null,
+            "description": "A unique username chosen by the user for their account.",
             "type": {
               "kind": "NON_NULL",
               "name": null,
@@ -299,31 +303,19 @@
       {
         "kind": "OBJECT",
         "name": "UserResponse",
-        "description": "A type that describes the User returned in the Auth response",
+        "description": "Represents the user information that is returned as part of the authentication response.\nThis type is used in the AuthResponse to provide details about the logged-in or newly registered user.",
         "isOneOf": null,
         "fields": [
           {
             "name": "email",
-            "description": null,
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "id",
-            "description": null,
+            "description": "Email address associated with the user's account. Used for login and communication.",
             "args": [],
             "type": {
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
                 "kind": "SCALAR",
-                "name": "ID",
+                "name": "String",
                 "ofType": null
               }
             },
@@ -332,12 +324,16 @@
           },
           {
             "name": "username",
-            "description": null,
+            "description": "Username chosen by the user. This is a unique identifier within the system.",
             "args": [],
             "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
             },
             "isDeprecated": false,
             "deprecationReason": null

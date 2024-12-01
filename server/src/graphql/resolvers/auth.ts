@@ -21,7 +21,7 @@ export const authResolvers = {
           throw new AuthenticationError('Invalid password');
         }
     
-        const token = signToken(user.username, user.email, user._id);
+        const token = signToken({username: user.username, email: user.email});
         return { token, user };
       } catch (error) {
         if (error instanceof AuthenticationError) {
@@ -36,8 +36,9 @@ export const authResolvers = {
     registerUser: async (_: any, { input }: MutationRegisterUserArgs): Promise<AuthResponse> => {
       try {
         const user = await User.create(input);
-        const token = signToken(user.username, user.email, user._id);
-        return { token, user };
+        const userPayload = {username: user.username, email: user.email};
+        const token = signToken(userPayload);
+        return { token, user: userPayload};
       } catch (error: any) {
         if(error?.code === 11000) {
           throw new Error(`Sorry, that username or email already exists`);

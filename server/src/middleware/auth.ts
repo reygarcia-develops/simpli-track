@@ -1,9 +1,9 @@
-import jwt, { JwtPayload } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import { GraphQLError } from 'graphql';
-import { AuthRequest } from '../types/auth';
+import { AuthData, AuthRequest } from '../types/auth';
 import dotenv from 'dotenv';
 
-dotenv.config(); // Load environment variables
+dotenv.config();
 
 
 // Middleware to authenticate token
@@ -11,7 +11,7 @@ export const authenticateToken = async ({ req }: {req: AuthRequest}): Promise<Au
   let token = req.body.token || req.query.token || req.headers.authorization;
 
   if (req.headers.authorization) {
-    token = token.split(' ').pop()?.trim();  // Handle 'Bearer <token>'
+    token = token.split(' ').pop()?.trim(); 
   }
 
   if (!token) {
@@ -19,8 +19,7 @@ export const authenticateToken = async ({ req }: {req: AuthRequest}): Promise<Au
   }
 
   try {
-    // jwt.verify returns JwtPayload when using the 'verify' method with a valid token
-    const { data }: any = jwt.verify(token, process.env.JWT_SECRET_KEY || '', { maxAge: '2h' }) as JwtPayload;
+    const { data }: any = jwt.verify(token, process.env.JWT_SECRET_KEY || '', { maxAge: '2h' });
     req.user = data;
   } catch (err) {
     console.log('Invalid token');
@@ -30,8 +29,7 @@ export const authenticateToken = async ({ req }: {req: AuthRequest}): Promise<Au
 };
 
 // Function to sign the token
-export const signToken = (username: string, email: string, id: unknown): string => {
-  const payload = { username, email, id };
+export const signToken = (payload: AuthData): string => {
   const secretKey = process.env.JWT_SECRET_KEY;
 
   if (!secretKey) {
@@ -41,7 +39,7 @@ export const signToken = (username: string, email: string, id: unknown): string 
   return jwt.sign({ data: payload }, secretKey, { expiresIn: '2h' });
 };
 
-export class AuthenticationError extends GraphQLError {
+export class AuthenticationError extends GraphQLError  {
   constructor(message: string) {
     super(message, undefined, undefined, undefined, ['UNAUTHENTICATED']);
     Object.defineProperty(this, 'name', { value: 'AuthenticationError' });

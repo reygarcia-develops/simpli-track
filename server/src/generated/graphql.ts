@@ -16,24 +16,40 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
-/** Returns the JWT token and the User type */
+/**
+ * Represents the authentication response returned after a successful login or user registration.
+ * It contains the authentication token and the user details.
+ */
 export type AuthResponse = {
   __typename?: 'AuthResponse';
+  /** The authentication token that can be used for subsequent requests to access protected resources. */
   token: Scalars['ID']['output'];
-  user?: Maybe<UserResponse>;
+  /** The user object returned after login or registration, containing essential user details. */
+  user: UserResponse;
 };
 
-/** A input for required info for logging in a user */
+/**
+ * Input type for logging in a user.
+ * This type requires the email and password of the user in order to authenticate them.
+ */
 export type LoginUser = {
+  /** The email address associated with the user's account. Used for login. */
   email: Scalars['String']['input'];
+  /** The password associated with the user's account. Used for authentication. */
   password: Scalars['String']['input'];
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
-  /** Logs in the user via their email and password. Returns an Auth */
+  /**
+   * Logs in the user using their email and password.
+   * Returns an AuthResponse containing the authentication token and user details.
+   */
   loginUser?: Maybe<AuthResponse>;
-  /** Registers a user. Returns an Auth */
+  /**
+   * Registers a new user by providing their username, email, and password.
+   * Returns an AuthResponse containing the authentication token and the newly created user details.
+   */
   registerUser?: Maybe<AuthResponse>;
 };
 
@@ -49,6 +65,10 @@ export type MutationRegisterUserArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  /**
+   * A simple query that returns a greeting message for the provided name.
+   * Useful for testing the GraphQL API.
+   */
   hello?: Maybe<Scalars['String']['output']>;
 };
 
@@ -57,19 +77,29 @@ export type QueryHelloArgs = {
   name: Scalars['String']['input'];
 };
 
-/** A input for registering a new user to the Simpli Track */
+/**
+ * Input type for registering a new user.
+ * This type contains the necessary information (username, email, password) to create a new user account.
+ */
 export type RegisterUser = {
+  /** The email address the user wants to associate with their account. This will be used for login and notifications. */
   email: Scalars['String']['input'];
+  /** The password that will be associated with the user's account. Should meet security requirements. */
   password: Scalars['String']['input'];
+  /** A unique username chosen by the user for their account. */
   username: Scalars['String']['input'];
 };
 
-/** A type that describes the User returned in the Auth response */
+/**
+ * Represents the user information that is returned as part of the authentication response.
+ * This type is used in the AuthResponse to provide details about the logged-in or newly registered user.
+ */
 export type UserResponse = {
   __typename?: 'UserResponse';
-  email?: Maybe<Scalars['String']['output']>;
-  id: Scalars['ID']['output'];
-  username?: Maybe<Scalars['String']['output']>;
+  /** Email address associated with the user's account. Used for login and communication. */
+  email: Scalars['String']['output'];
+  /** Username chosen by the user. This is a unique identifier within the system. */
+  username: Scalars['String']['output'];
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -170,7 +200,7 @@ export type ResolversParentTypes = ResolversObject<{
 
 export type AuthResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['AuthResponse'] = ResolversParentTypes['AuthResponse']> = ResolversObject<{
   token?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  user?: Resolver<Maybe<ResolversTypes['UserResponse']>, ParentType, ContextType>;
+  user?: Resolver<ResolversTypes['UserResponse'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -184,9 +214,8 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 }>;
 
 export type UserResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserResponse'] = ResolversParentTypes['UserResponse']> = ResolversObject<{
-  email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  username?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
