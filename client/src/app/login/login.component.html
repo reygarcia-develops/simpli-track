@@ -33,7 +33,6 @@
             [type]="!isPasswordVisible() ? 'password' : 'text'"
             (focus)="onFocus('password')"
             (blur)="onBlur('password')"
-            minlength="10"
             maxlength="50"
           >
           <label for="password">Password</label>
@@ -75,12 +74,6 @@
             ></path>
           </g>
         </svg>
-        </div>
-        <div class="input-error" [class.animate]="loginForm.controls['password'].hasError('minlength')">
-          Go big! Use at least 10 characters.
-        </div>
-        <div class="input-error" [class.animate]="loginForm.controls['password'].hasError('passwordInvalid')">
-          Mix it up! Include a lowercase and uppercase letter, a number, and a special character.
         </div>
       </div>
     </form>

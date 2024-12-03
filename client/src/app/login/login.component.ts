@@ -1,11 +1,10 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, inject, OnInit, signal, ViewChild, WritableSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, OnInit, signal, ViewChild, WritableSignal } from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Observable, of, map, debounceTime } from 'rxjs';
+import { Observable, of, debounceTime } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { addAnimationEndListener } from '../common/animation-helper';
-import { Apollo, gql } from 'apollo-angular';
-import { passwordAsyncValidator } from '../common/validators';
 import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
 
 @Component({
@@ -26,7 +25,8 @@ export class LoginComponent implements OnInit{
   
 
   public fb = inject(FormBuilder);
-  private apollo = inject(Apollo);
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
   public helloResponse: Observable<string> = of('');
   public isPasswordVisible: WritableSignal<boolean> = signal(false);
@@ -38,10 +38,7 @@ export class LoginComponent implements OnInit{
       '',
       [ 
         Validators.required, 
-        Validators.minLength(10),
-        Validators.maxLength(50)
       ],
-      [passwordAsyncValidator]
     ],
   });
 
@@ -51,26 +48,34 @@ export class LoginComponent implements OnInit{
   private baseWarning = getComputedStyle(document.documentElement).getPropertyValue('--base-warning');
 
   ngOnInit(): void {
-    const hello = gql `
-      query HelloName($name: String!) {
-        hello(name: $name)
-      }
-    `;
-
-    this.helloResponse = this.apollo.watchQuery<any>({
-      query: hello,
-      variables: {
-        name: 'rey'
-      },
-      notifyOnNetworkStatusChange: true
-    }).valueChanges.pipe(map(({data}) => data.hello));
-
     this.createControlListener('email');
     this.createControlListener('password');
   }
 
   public loginUser() {
-    console.log('Logging in');
+    if(!this.loginForm.valid) {
+      return;
+    }
+    this.authService.login(
+      this.loginForm.controls['email'].value, 
+      this.loginForm.controls['password'].value
+    )
+    .subscribe({
+      next: (resp) => {
+        const loginResponse = resp.data?.loginUser;
+        if(loginResponse) {
+          this.authService.storeToken(loginResponse.token);
+          this.router.navigate(['/home'])
+        }
+        // TODO throw a dialog here;
+        console.log('Something unexpected occurred in login next');
+        
+      },
+      error: (err) => {
+        console.log("here", err);
+      },
+    });
+
   }
 
   public onFocus(ctrlName: string) {
