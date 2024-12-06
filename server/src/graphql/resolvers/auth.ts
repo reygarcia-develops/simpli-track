@@ -1,5 +1,6 @@
+import { GraphQLError } from "graphql";
 import { AuthResponse, MutationLoginUserArgs, MutationRegisterUserArgs, QueryHelloArgs } from "../../generated/graphql.js";
-import { AuthenticationError, signToken } from "../../middleware/auth.js";
+import { signToken } from "../../middleware/auth.js";
 import User from "../../models/user.js";
 
 export const authResolvers = {
@@ -13,23 +14,23 @@ export const authResolvers = {
       try {
         const user = await User.findOne({ email: input.email });
         if (!user) {
-          throw new AuthenticationError("User does not exist");
+          throw new GraphQLError('Invalid login', {extensions: {code: 'NOTFOUND'}} );
         }
     
         const correctPw: boolean = await user.isCorrectPassword(input.password);
         if (!correctPw) {
-          throw new AuthenticationError('Invalid password');
+          throw new GraphQLError('Invalid login', {extensions: {code: 'NOTFOUND'}} );
+
         }
     
         const token = signToken({username: user.username, email: user.email});
         return { token, user };
       } catch (error) {
-        if (error instanceof AuthenticationError) {
+        if (error instanceof GraphQLError) {
           throw error;
         }
-    
-        console.error('Unexpected error during user login:', error);
-        throw new Error("An unexpected error occurred");
+        console.log('made it here');
+        throw new GraphQLError("An unexpected error occurred", {extensions: {code: 'INTERNAL_SERVER_ERROR', stacktrace: error}});
       }
     },
 
@@ -41,10 +42,9 @@ export const authResolvers = {
         return { token, user: userPayload};
       } catch (error: any) {
         if(error?.code === 11000) {
-          throw new Error(`Sorry, that username or email already exists`);
+          throw new GraphQLError(`Invalid registration`, {extensions: {code: 'CONFLICT'}});
         }
-        console.error('Unexpected error during user registration', error);
-        throw new Error('An unexpected error occurred');
+        throw new GraphQLError("An unexpected error occurred", {extensions: {code: 'INTERNAL_SERVER_ERROR', stacktrace: error}});
       }
     },
   },

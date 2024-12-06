@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
 import { AuthResponse, MutationLoginUserArgs } from '../generated/graphql';
 
-type Response = {
+type LoginResponse = {
   loginUser: AuthResponse
 }
 
@@ -26,9 +26,10 @@ export class AuthService {
 
   public login(email: string, password: string) {
     const payload = {email, password};
-    return this.apollo.mutate({
+    return this.apollo.mutate<LoginResponse>({
       mutation: LOGIN_MUTATION,
       variables: {input: payload},
+      errorPolicy: 'none',
     });
   }
   

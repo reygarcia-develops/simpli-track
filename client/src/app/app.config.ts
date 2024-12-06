@@ -24,6 +24,12 @@ export const appConfig: ApplicationConfig = {
           uri: 'http://localhost:3001/graphql',
         }),
         cache: new InMemoryCache(),
+        defaultOptions: {
+          mutate: {
+            errorPolicy: 'none'
+          }
+        }
       };
-    })]
+    }),
+  ]
 };

@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { addAnimationEndListener } from '../common/animation-helper';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { ToastService } from '../services/toast.service';
 
 
 @Component({
@@ -27,6 +28,7 @@ export class LoginComponent implements OnInit{
   public fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private toastService = inject(ToastService);
 
   public helloResponse: Observable<string> = of('');
   public isPasswordVisible: WritableSignal<boolean> = signal(false);
@@ -52,7 +54,7 @@ export class LoginComponent implements OnInit{
     this.createControlListener('password');
   }
 
-  public loginUser() {
+  public loginUser(): void {
     if(!this.loginForm.valid) {
       return;
     }
@@ -61,21 +63,22 @@ export class LoginComponent implements OnInit{
       this.loginForm.controls['password'].value
     )
     .subscribe({
-      next: (resp) => {
-        const loginResponse = resp.data?.loginUser;
-        if(loginResponse) {
-          this.authService.storeToken(loginResponse.token);
-          this.router.navigate(['/home'])
+      next: (result) => {
+        // Handle successful login
+        const loginResponse = result.data?.loginUser;
+        if (!loginResponse) {
+          this.toastService.showToast('Failed to login', 'error');
+          return;
         }
-        // TODO throw a dialog here;
-        console.log('Something unexpected occurred in login next');
+
+        this.authService.storeToken(loginResponse.token);
+        this.router.navigate(['/home']);
         
       },
-      error: (err) => {
-        console.log("here", err);
+      error: (unexpectedEror) => {
+        this.toastService.showToast('Failed to login', 'error');
       },
     });
-
   }
 
   public onFocus(ctrlName: string) {
