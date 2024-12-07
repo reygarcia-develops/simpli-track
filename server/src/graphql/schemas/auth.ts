@@ -5,15 +5,12 @@ const authSchema = gql`
   Represents the user information that is returned as part of the authentication response.
   This type is used in the AuthResponse to provide details about the logged-in or newly registered user.
   """
-  type UserResponse {
-    "Unique identifier for the user (ID)"
-    id: ID!
-    
+  type UserResponse {    
     "Username chosen by the user. This is a unique identifier within the system."
-    username: String
+    username: String!
     
     "Email address associated with the user's account. Used for login and communication."
-    email: String
+    email: String!
   }
 
   """
@@ -25,7 +22,7 @@ const authSchema = gql`
     token: ID!
     
     "The user object returned after login or registration, containing essential user details."
-    user: UserResponse
+    user: UserResponse!
   }
 
   """

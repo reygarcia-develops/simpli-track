@@ -1,0 +1,6 @@
+
+<div class="toast-container">
+  <div class="toast" #toast [class]="toastSignal()?.type">
+    <div class="message">{{ toastSignal()?.message }}</div>
+  </div>
+</div>

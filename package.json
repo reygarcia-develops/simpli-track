@@ -6,8 +6,9 @@
   "main": "server/server.js",
   "scripts": {
     "build": "concurrently \"npm run server:build\" \"npm run client:build\"",
+    "codegen": "graphql-codegen-esm --config codegen.ts",
     "dev": "concurrently \"cd server && npm run watch\" \"cd client && npm run start\"",
-    "install": "cd server && npm i && ../client & npm i",
+    "install": "cd server && npm i && cd ../client & npm i",
     "render-build":"npm run install && npm run server:build && npm run client:build",
     "server:build": "cd server && npm run build",
     "client:build": "cd client && npm run build",
@@ -17,6 +18,10 @@
   "keywords": [],
   "license": "ISC",
   "devDependencies": {
-    "concurrently": "^9.1.0"
+    "concurrently": "^9.1.0",
+    "@graphql-codegen/cli": "5.0.3",
+    "@graphql-codegen/introspection": "4.0.3",
+    "@graphql-codegen/typescript": "4.1.1",
+    "@graphql-codegen/typescript-resolvers": "4.4.0"
   }
 }

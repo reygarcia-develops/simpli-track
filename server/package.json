@@ -5,28 +5,20 @@
   "main": "dist/server.js",
   "scripts": {
     "build": "tsc",
-    "codegen": "graphql-codegen-esm --config codegen.ts",
     "start": "node dist/server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "nodemon dist/server.js"
   },
   "dependencies": {
     "@apollo/server": "^4.11.2",
-    "@graphql-codegen/cli": "^5.0.3",
-    "@graphql-codegen/typescript": "^4.1.1",
-    "@graphql-codegen/typescript-resolvers": "^4.4.0",
     "bcrypt": "^5.1.1",
     "express": "^4.21.1",
     "graphql": "^16.9.0",
     "graphql-tag": "^2.12.6",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.8.1"
+    "mongoose": "^8.8.3"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "5.0.3",
-    "@graphql-codegen/introspection": "4.0.3",
-    "@graphql-codegen/typescript": "4.1.1",
-    "@graphql-codegen/typescript-resolvers": "4.4.0",
     "@types/bcrypt": "^5.0.2",
     "@types/body-parser": "^1.19.5",
     "@types/cors": "^2.8.17",

@@ -1,22 +1,25 @@
 import { ChangeDetectionStrategy, Component, ElementRef, inject, OnInit, signal, ViewChild, WritableSignal } from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Observable, of, debounceTime } from 'rxjs';
+import { Observable, of, map, debounceTime } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { addAnimationEndListener } from '../common/animation-helper';
+import { passwordAsyncValidator } from '../common/validators';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { ToastService } from '../services/toast.service';
 
 
 @Component({
-  selector: 'st-login',
+  selector: 'st-register',
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule, RouterModule],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.scss',
+  templateUrl: './register.component.html',
+  styleUrl: './register.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoginComponent implements OnInit{
+export class RegisterComponent implements OnInit{
+  @ViewChild('usernameGroup') 
+  usernameGroup: ElementRef | undefined;
 
   @ViewChild('emailGroup') 
   emailGroup: ElementRef | undefined;
@@ -25,8 +28,8 @@ export class LoginComponent implements OnInit{
   passwordGroup: ElementRef | undefined;
   
 
-  public fb = inject(FormBuilder);
-  private authService = inject(AuthService);
+  public authService = inject(AuthService);
+  private fb = inject(FormBuilder);
   private router = inject(Router);
   private toastService = inject(ToastService);
 
@@ -34,13 +37,17 @@ export class LoginComponent implements OnInit{
   public isPasswordVisible: WritableSignal<boolean> = signal(false);
   public isNewUser: WritableSignal<boolean> = signal(false);
 
-  public loginForm: FormGroup = this.fb.group({
+  public registerForm: FormGroup = this.fb.group({
+    username: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(20)]],
     email: ['', [Validators.required, Validators.email, Validators.maxLength(50)]],
     password: [
       '',
       [ 
-        Validators.required,
+        Validators.required, 
+        Validators.minLength(10),
+        Validators.maxLength(50)
       ],
+      [passwordAsyncValidator]
     ],
   });
 
@@ -50,40 +57,40 @@ export class LoginComponent implements OnInit{
   private baseWarning = getComputedStyle(document.documentElement).getPropertyValue('--base-warning');
 
   ngOnInit(): void {
+    this.createControlListener('username');
     this.createControlListener('email');
     this.createControlListener('password');
   }
 
-  public loginUser(): void {
-    if(!this.loginForm.valid) {
+  public registerUser(): void {
+    if(!this.registerForm.valid) {
       return;
-    }
-    this.authService.login(
-      this.loginForm.controls['email'].value, 
-      this.loginForm.controls['password'].value
-    )
-    .subscribe({
+    } 
+    this.authService.register(
+      this.registerForm.controls['username'].value,
+      this.registerForm.controls['email'].value,
+      this.registerForm.controls['password'].value
+    ).subscribe({
       next: (result) => {
-        // Handle successful login
-        const loginResponse = result.data?.loginUser;
-        if (!loginResponse) {
-          this.toastService.showToast('Failed to login', 'error');
+        const registerResponse = result.data?.registerUser;
+        if(!registerResponse) {
+          this.toastService.showToast('Failed to register', 'error');
           return;
         }
-
-        this.authService.storeToken(loginResponse.token);
+        this.authService.storeToken(registerResponse.token);
         this.router.navigate(['/home']);
-        
+        this.toastService.showToast('Sucessfully registered', 'success');
       },
-      error: (unexpectedEror) => {
-        this.toastService.showToast('Failed to login', 'error');
-      },
-    });
+      error: () => {
+        this.toastService.showToast('Failed to register', 'error');
+      }
+    })
   }
 
   public onFocus(ctrlName: string) {
     const el =  ctrlName === 'password' ? this.passwordGroup?.nativeElement :
-    ctrlName === 'email' ? this.emailGroup?.nativeElement : null;
+    ctrlName === 'email' ? this.emailGroup?.nativeElement :
+    ctrlName === 'username' ? this.usernameGroup?.nativeElement : null;
 
     if (!el) {
       return;
@@ -96,26 +103,25 @@ export class LoginComponent implements OnInit{
 
   public onBlur(ctrlName: string) {
     const el =  ctrlName === 'password' ? this.passwordGroup?.nativeElement :
-                ctrlName === 'email' ? this.emailGroup?.nativeElement : null
-
+                ctrlName === 'email' ? this.emailGroup?.nativeElement :
+                ctrlName === 'username' ? this.usernameGroup?.nativeElement : null;
     if (!el) {
       return;
     }
-    const control = this.loginForm.controls[ctrlName];
+    const control = this.registerForm.controls[ctrlName];
     if (control.errors && control.touched) {
       this.triggerShrink( this.baseError, el);
     }
 
   }
 
-  public getFormControl(controlName: string): FormControl {
-    return this.loginForm.controls[controlName] as FormControl
-  }
-
-  public passwordToggle(event: Event) {
+  public passwordToggle(_: Event) {
     this.isPasswordVisible.set(!this.isPasswordVisible());
   }
 
+  public getFormControl(controlName: string): FormControl {
+    return this.registerForm.controls[controlName] as FormControl
+  }
 
   /**
    * Triggers the shrink animation on the input element and transitions to the expand animation
@@ -160,11 +166,12 @@ export class LoginComponent implements OnInit{
   }
 
   private createControlListener(ctrlName: string): void {
-    this.loginForm.get(ctrlName)?.valueChanges.pipe(
+    this.registerForm.get(ctrlName)?.valueChanges.pipe(
       debounceTime(300)
     ).subscribe(() => {
       const el =  ctrlName === 'password' ? this.passwordGroup?.nativeElement :
-      ctrlName === 'email' ? this.emailGroup?.nativeElement : null
+      ctrlName === 'email' ? this.emailGroup?.nativeElement :
+      ctrlName === 'username' ? this.usernameGroup?.nativeElement : null;
 
       if (!el) {
         return;

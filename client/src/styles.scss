@@ -1,5 +1,6 @@
 @import './variables.scss';
-@import './base-styling/button.scss';
+@import './base-styling/button';
+@import './base-styling/input';
 
 * {
   margin: 0;
@@ -30,12 +31,19 @@ body {
   background-color: inherit;;
 }
 
+// Override the autocomplete color, and background
+input:-webkit-autofill, input:autofill {
+  -webkit-box-shadow: 0 0 0px 1000px var(--base-grey) inset;
+  -webkit-text-fill-color: var(--base-font-color);
+
+}
+
 /* Default theme: light */
 :root {
   /* BASE COLORS */
   --base-primary: #6495ed;
-  --base-succes: #6BCB77;
-  --base-warning: #FF8C42;
+  --base-success: #6BCB77;
+  --base-warning: #FFA94D;
   --base-error: #ED6A6A;
   --base-grey: #efefef;
 
@@ -58,8 +66,8 @@ body {
 [data-theme="light"] {
   /* BASE COLORS */
   --base-primary: #6495ed;
-  --base-succes: #6BCB77;
-  --base-warning: #FF8C42;
+  --base-success: #6BCB77;
+  --base-warning: #FFA94D;
   --base-error: #ED6A6A;
   --base-grey: #efefef;
 
@@ -82,8 +90,8 @@ body {
 [data-theme="dark"] {
   /* Dark theme variables */
   --base-primary: #87B8FF;
-  --base-succes: #7EDD91;
-  --base-warning: #FFA75A;
+  --base-success: #7EDD91;
+  --base-warning: #FFA94D;
   --base-error: #FF7B7B;
   --base-grey: #3A3A3A;
 

@@ -3,10 +3,8 @@ import bcrypt from 'bcrypt';
 
 
 export interface UserDocument extends Document {
-  bookCount: number;
   createdAt: Date;
   email: string;
-  id: string;
   password: string;
   updatedAt: Date;
   username: string;
