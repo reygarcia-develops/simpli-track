@@ -29,7 +29,6 @@ export const authResolvers = {
         if (error instanceof GraphQLError) {
           throw error;
         }
-        console.log('made it here');
         throw new GraphQLError("An unexpected error occurred", {extensions: {code: 'INTERNAL_SERVER_ERROR', stacktrace: error}});
       }
     },
@@ -41,6 +40,9 @@ export const authResolvers = {
         const token = signToken(userPayload);
         return { token, user: userPayload};
       } catch (error: any) {
+        if (error instanceof GraphQLError) {
+          throw error;
+        }
         if(error?.code === 11000) {
           throw new GraphQLError(`Invalid registration`, {extensions: {code: 'CONFLICT'}});
         }

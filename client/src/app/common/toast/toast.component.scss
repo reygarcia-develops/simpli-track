@@ -31,7 +31,7 @@
 
     &.shrink {
       &:before {
-        animation: shrink 1s linear;
+        animation: shrink 2s linear;
         background-color: currentColor;
         bottom: 0;
         content: "";

@@ -1,10 +1,7 @@
-<div>
-  {{ helloResponse | async }}
-</div>
 <div class="register-container">
   <div class="form-container">
     <span class="title">Welcome aboard</span>
-    <form class="register-form" [formGroup]="loginForm">
+    <form class="register-form" [formGroup]="registerForm">
       <div class="form-group-container">
         <div class="form-group" #usernameGroup>
           <input
@@ -31,6 +28,7 @@
             id="email"
             autocomplete="email"
             type="email"
+            maxlength="50"
             (focus)="onFocus('email')"
             (blur)="onBlur('email')"
           />
@@ -38,7 +36,7 @@
         </div>
         <div
           class="input-error"
-          [class.animate]="loginForm.controls['email'].hasError('email')"
+          [class.animate]="registerForm.controls['email'].hasError('email')"
         >
           Oops! That doesn't look like a valid email.
         </div>
@@ -98,14 +96,14 @@
         </div>
         <div
           class="input-error"
-          [class.animate]="loginForm.controls['password'].hasError('minlength')"
+          [class.animate]="registerForm.controls['password'].hasError('minlength')"
         >
           Go big! Use at least 10 characters.
         </div>
         <div
           class="input-error"
           [class.animate]="
-            loginForm.controls['password'].hasError('passwordInvalid')
+            registerForm.controls['password'].hasError('passwordInvalid')
           "
         >
           Mix it up! Include a lowercase and uppercase letter, a number, and a
@@ -118,7 +116,7 @@
       <button
         class="primary"
         type="submit"
-        [disabled]="loginForm.invalid"
+        [disabled]="registerForm.invalid"
         (click)="registerUser()"
       >
         Register

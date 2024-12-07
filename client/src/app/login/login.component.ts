@@ -35,11 +35,11 @@ export class LoginComponent implements OnInit{
   public isNewUser: WritableSignal<boolean> = signal(false);
 
   public loginForm: FormGroup = this.fb.group({
-    email: ['', [Validators.required, Validators.email]],
+    email: ['', [Validators.required, Validators.email, Validators.maxLength(50)]],
     password: [
       '',
       [ 
-        Validators.required, 
+        Validators.required,
       ],
     ],
   });

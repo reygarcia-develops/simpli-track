@@ -1,11 +1,12 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, inject, OnInit, signal, ViewChild, WritableSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, OnInit, signal, ViewChild, WritableSignal } from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Observable, of, map, debounceTime } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { addAnimationEndListener } from '../common/animation-helper';
-import { Apollo, gql } from 'apollo-angular';
 import { passwordAsyncValidator } from '../common/validators';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../services/auth.service';
+import { ToastService } from '../services/toast.service';
 
 
 @Component({
@@ -27,16 +28,18 @@ export class RegisterComponent implements OnInit{
   passwordGroup: ElementRef | undefined;
   
 
-  public fb = inject(FormBuilder);
-  private apollo = inject(Apollo);
+  public authService = inject(AuthService);
+  private fb = inject(FormBuilder);
+  private router = inject(Router);
+  private toastService = inject(ToastService);
 
   public helloResponse: Observable<string> = of('');
   public isPasswordVisible: WritableSignal<boolean> = signal(false);
   public isNewUser: WritableSignal<boolean> = signal(false);
 
-  public loginForm: FormGroup = this.fb.group({
+  public registerForm: FormGroup = this.fb.group({
     username: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(20)]],
-    email: ['', [Validators.required, Validators.email]],
+    email: ['', [Validators.required, Validators.email, Validators.maxLength(50)]],
     password: [
       '',
       [ 
@@ -54,27 +57,34 @@ export class RegisterComponent implements OnInit{
   private baseWarning = getComputedStyle(document.documentElement).getPropertyValue('--base-warning');
 
   ngOnInit(): void {
-    const hello = gql `
-      query HelloName($name: String!) {
-        hello(name: $name)
-      }
-    `;
-
-    this.helloResponse = this.apollo.watchQuery<any>({
-      query: hello,
-      variables: {
-        name: 'rey'
-      },
-      notifyOnNetworkStatusChange: true
-    }).valueChanges.pipe(map(({data}) => data.hello));
-
     this.createControlListener('username');
     this.createControlListener('email');
     this.createControlListener('password');
   }
 
-  public registerUser() {
-    console.log('Registering user');
+  public registerUser(): void {
+    if(!this.registerForm.valid) {
+      return;
+    } 
+    this.authService.register(
+      this.registerForm.controls['username'].value,
+      this.registerForm.controls['email'].value,
+      this.registerForm.controls['password'].value
+    ).subscribe({
+      next: (result) => {
+        const registerResponse = result.data?.registerUser;
+        if(!registerResponse) {
+          this.toastService.showToast('Failed to register', 'error');
+          return;
+        }
+        this.authService.storeToken(registerResponse.token);
+        this.router.navigate(['/home']);
+        this.toastService.showToast('Sucessfully registered', 'success');
+      },
+      error: () => {
+        this.toastService.showToast('Failed to register', 'error');
+      }
+    })
   }
 
   public onFocus(ctrlName: string) {
@@ -98,19 +108,19 @@ export class RegisterComponent implements OnInit{
     if (!el) {
       return;
     }
-    const control = this.loginForm.controls[ctrlName];
+    const control = this.registerForm.controls[ctrlName];
     if (control.errors && control.touched) {
       this.triggerShrink( this.baseError, el);
     }
 
   }
 
-  public passwordToggle(event: Event) {
+  public passwordToggle(_: Event) {
     this.isPasswordVisible.set(!this.isPasswordVisible());
   }
 
   public getFormControl(controlName: string): FormControl {
-    return this.loginForm.controls[controlName] as FormControl
+    return this.registerForm.controls[controlName] as FormControl
   }
 
   /**
@@ -156,7 +166,7 @@ export class RegisterComponent implements OnInit{
   }
 
   private createControlListener(ctrlName: string): void {
-    this.loginForm.get(ctrlName)?.valueChanges.pipe(
+    this.registerForm.get(ctrlName)?.valueChanges.pipe(
       debounceTime(300)
     ).subscribe(() => {
       const el =  ctrlName === 'password' ? this.passwordGroup?.nativeElement :

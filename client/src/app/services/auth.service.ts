@@ -1,12 +1,18 @@
 import { inject, Injectable } from '@angular/core';
-import { Apollo, gql } from 'apollo-angular';
-import { AuthResponse, MutationLoginUserArgs } from '../generated/graphql';
+import { Apollo, gql, MutationResult } from 'apollo-angular';
+import { AuthResponse, MutationLoginUserArgs, MutationRegisterUserArgs } from '../generated/graphql';
+import { Observable } from 'rxjs';
 
 type LoginResponse = {
   loginUser: AuthResponse
 }
 
-const LOGIN_MUTATION = gql<Response, MutationLoginUserArgs>`
+type RegisterResponse = {
+  registerUser: AuthResponse
+};
+
+
+const LOGIN_MUTATION = gql<LoginResponse, MutationLoginUserArgs>`
   mutation Login($input: LoginUser!) {
     loginUser(input: $input) {
       token
@@ -17,6 +23,19 @@ const LOGIN_MUTATION = gql<Response, MutationLoginUserArgs>`
     }
   }
 `
+
+const REGISTER_MUTATION = gql<Response, MutationRegisterUserArgs>`
+  mutation Register($input: RegisterUser!) {
+    registerUser(input: $input) {
+      token
+      user {
+        username
+        email
+      }
+    }
+  }
+`
+
 @Injectable({
   providedIn: 'root'
 })
@@ -24,12 +43,19 @@ export class AuthService {
   private apollo = inject(Apollo);
   private tokenKey: string = 'jwt';
 
-  public login(email: string, password: string) {
+  public login(email: string, password: string): Observable<MutationResult<LoginResponse>> {
     const payload = {email, password};
     return this.apollo.mutate<LoginResponse>({
       mutation: LOGIN_MUTATION,
       variables: {input: payload},
-      errorPolicy: 'none',
+    });
+  }
+
+  public register(username: string, email: string, password: string): Observable<MutationResult<RegisterResponse>> {
+    const payload = {email, username, password};
+    return this.apollo.mutate<RegisterResponse>({
+      mutation: REGISTER_MUTATION,
+      variables: {input: payload},
     });
   }
   

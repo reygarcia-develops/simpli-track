@@ -31,6 +31,13 @@ body {
   background-color: inherit;;
 }
 
+// Override the autocomplete color, and background
+input:-webkit-autofill, input:autofill {
+  -webkit-box-shadow: 0 0 0px 1000px var(--base-grey) inset;
+  -webkit-text-fill-color: var(--base-font-color);
+
+}
+
 /* Default theme: light */
 :root {
   /* BASE COLORS */
