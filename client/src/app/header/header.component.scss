@@ -3,6 +3,7 @@
 
 .header-container {
   align-items: center;
+  background-color: var(--base-bg-color);
   display: flex;
   justify-content: space-between;
   min-height: $header-min-height;
