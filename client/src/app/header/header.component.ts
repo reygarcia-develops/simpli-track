@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, HostListener, inject, OnInit, output, Renderer2, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, computed, ElementRef, HostListener, inject, OnInit, output, Renderer2, ViewChild, WritableSignal } from '@angular/core';
 import { addAnimationEndListener } from '../common/animation-helper';
+import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'st-header',
@@ -18,15 +20,20 @@ export class HeaderComponent implements AfterViewInit {
   @ViewChild('moon')
   moon: ElementRef | undefined;
   
+  private router = inject(Router);
+  public authService = inject(AuthService);
   public renderer = inject(Renderer2);
+
   public currentTheme = 'light'
+
+  public readonly isLoggedIn = this.authService.isLoggedIn;
 
   @ViewChild('headerContainer') headerContainer!: ElementRef;
   ngAfterViewInit(): void {
     this.onWindowScroll();
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme) {
-      this.setTheme(savedTheme); // Apply saved theme
+      this.setTheme(savedTheme);
     } else {
       // Default to system preference (media query)
       const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -40,7 +47,6 @@ export class HeaderComponent implements AfterViewInit {
     } else {
       moonElement.classList.add('animate-down');
     }
-
   }
 
   public toggleTheme(): void {
@@ -62,6 +68,11 @@ export class HeaderComponent implements AfterViewInit {
         moonElement.classList.add('animate-down');
       });
     }
+  }
+
+  public logout() {
+    this.authService.clearToken();
+    this.router.navigate(['/login']);
   }
 
   private setTheme(theme: string): void {

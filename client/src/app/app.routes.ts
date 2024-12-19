@@ -1,12 +1,13 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
-import { HomeComponent } from './home/home.component';
-import { AuthGuard } from './guards/auth.guard';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { UnauthenticatedGuard } from './guards/unauthenticated.guard';
+import { AuthenticatedGuard } from './guards/authenticated.guard';
 
 export const routes: Routes = [
-  {path: 'login', title: 'Login', component: LoginComponent},
-  {path: 'register', title: 'Register', component: RegisterComponent},
-  {path: 'home', title: 'Home', component: HomeComponent, canActivate: [AuthGuard]},
+  {path: 'login', title: 'Login', component: LoginComponent, canActivate: [AuthenticatedGuard]},
+  {path: 'register', title: 'Register', component: RegisterComponent, canActivate: [AuthenticatedGuard]},
+  {path: 'dashboard', title: 'Dashboard', component: DashboardComponent, canActivate: [UnauthenticatedGuard]},
   {path: '', redirectTo: '/login', pathMatch: 'full'}
 ];

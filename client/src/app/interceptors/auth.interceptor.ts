@@ -22,7 +22,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       const unauthorized: boolean = err?.error?.errors?.[0]?.extensions?.code === 'UNAUTHORIZED';
       if(err.status === 500 && unauthorized) {
         authService.clearToken();
-        console.log(authService.getToken());
         router.navigate(['/login']);
       }
       return throwError(() => err);

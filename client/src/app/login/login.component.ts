@@ -72,8 +72,7 @@ export class LoginComponent implements OnInit{
         }
 
         this.authService.storeToken(loginResponse.token);
-        this.router.navigate(['/home']);
-        
+        this.router.navigate(['/dashboard']);
       },
       error: (unexpectedEror) => {
         this.toastService.showToast('Failed to login', 'error');
