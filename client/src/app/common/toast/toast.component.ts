@@ -2,7 +2,6 @@ import { Component, effect, ElementRef, inject, ViewChild } from '@angular/core'
 import { ToastService } from '../../services/toast.service';
 import { CommonModule } from '@angular/common';
 import { addAnimationEndListener } from '../animation-helper';
-import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'st-toast',
@@ -15,7 +14,7 @@ export class ToastComponent {
   @ViewChild('toast') toast: ElementRef | undefined;
 
   private toastService = inject(ToastService);
-  public toastSignal = toSignal(this.toastService.toast$);
+  public readonly toastSignal = this.toastService.toast;
 
   constructor() {
     effect(() => {
@@ -32,5 +31,4 @@ export class ToastComponent {
       }
     });
   }
-
 }
