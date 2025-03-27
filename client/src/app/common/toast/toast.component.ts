@@ -1,5 +1,5 @@
 import { Component, effect, ElementRef, inject, ViewChild } from '@angular/core';
-import { ToastService } from '../../services/toast.service';
+import { ToastService } from './toast.service';
 import { CommonModule } from '@angular/common';
 import { addAnimationEndListener } from '../animation-helper';
 

@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { addAnimationEndListener } from '../common/animation-helper';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-import { ToastService } from '../services/toast.service';
+import { ToastService } from '../common/toast/toast.service';
 
 
 @Component({
