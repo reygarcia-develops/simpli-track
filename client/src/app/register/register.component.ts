@@ -10,12 +10,11 @@ import { ToastService } from '../common/toast/toast.service';
 
 
 @Component({
-  selector: 'st-register',
-  standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, RouterModule],
-  templateUrl: './register.component.html',
-  styleUrl: './register.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'st-register',
+    imports: [ReactiveFormsModule, CommonModule, RouterModule],
+    templateUrl: './register.component.html',
+    styleUrl: './register.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RegisterComponent implements OnInit{
   @ViewChild('usernameGroup') 

@@ -4,11 +4,10 @@ import { CommonModule } from '@angular/common';
 import { addAnimationEndListener } from '../animation-helper';
 
 @Component({
-  selector: 'st-toast',
-  templateUrl: './toast.component.html',
-  styleUrls: ['./toast.component.scss'],
-  standalone: true,
-  imports: [CommonModule]
+    selector: 'st-toast',
+    templateUrl: './toast.component.html',
+    styleUrls: ['./toast.component.scss'],
+    imports: [CommonModule]
 })
 export class ToastComponent {
   @ViewChild('toast') toast: ElementRef | undefined;

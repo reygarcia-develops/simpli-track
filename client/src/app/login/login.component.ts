@@ -9,12 +9,11 @@ import { ToastService } from '../common/toast/toast.service';
 
 
 @Component({
-  selector: 'st-login',
-  standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, RouterModule],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'st-login',
+    imports: [ReactiveFormsModule, CommonModule, RouterModule],
+    templateUrl: './login.component.html',
+    styleUrl: './login.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent implements OnInit{
 
